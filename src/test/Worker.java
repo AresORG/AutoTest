@@ -42,7 +42,6 @@ public class Worker {
                     }
                 }
                 mShellCommand.uninstallApk(device,file);
-                mShellCommand.pull(device, packageName+".txt",".");
                 write(packageName,new File("./init.txt"));
             }
         }
@@ -50,7 +49,7 @@ public class Worker {
         mShellCommand.rename("./db/result.db",device+".db");
     }
     private boolean isFileMonitorCompleted(String device,String packageName){
-        mShellCommand.pull(device,packageName+".mark",".");
+        mShellCommand.pull(device,packageName+".mark","./mark");
         File file = new File("./"+packageName+".mark");
         if (file.exists()){
             mShellCommand.remove(device,packageName,".mark");
