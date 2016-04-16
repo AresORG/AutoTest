@@ -25,23 +25,32 @@ public class Worker {
                 mShellCommand.sendBroadCast(device, BROADCAST_START, packageName);
                 mShellCommand.startMonkey(device, file, monkey_times);
                 mShellCommand.sendBroadCast(device, BROADCAST_END, packageName);
-                if (!isFileMonitorCompleted(device,packageName)){
+
+                int times =0;
+                while (times < 30){ //若检测不到.mark文件，30秒后自动退出
                     try {
+                        times++;
+                        System.out.println("Waiting for " +times+" s");
+                        if (isFileMonitorCompleted(device,packageName)){
+                            times =30;
+                        }
                         Thread.sleep(1000);
-                        System.out.println("Thread sleep 1s");
+
                         System.out.println("Second Check .mark: "+isFileMonitorCompleted(device,packageName));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
                 mShellCommand.uninstallApk(device,file);
-                mShellCommand.pull(device,packageName,".txt");
-                write(packageName);
+                mShellCommand.pull(device, packageName+".txt",".");
+                write(packageName,new File("./init.txt"));
             }
         }
+        mShellCommand.pull(device,"/db/result.db","./db");
+        mShellCommand.rename("./db/result.db",device+".db");
     }
     private boolean isFileMonitorCompleted(String device,String packageName){
-        mShellCommand.pull(device,packageName,".mark");
+        mShellCommand.pull(device,packageName+".mark",".");
         File file = new File("./"+packageName+".mark");
         if (file.exists()){
             mShellCommand.remove(device,packageName,".mark");
@@ -49,10 +58,9 @@ public class Worker {
         }
         return false;
     }
-    public void write(String packageName){
-        String content =packageName+"\r\n";
-        byte[] buff = content.getBytes();
-        File file = new File("./init.txt");
+    public void write(String content,File file){
+        String contents =content+"\r\n";
+        byte[] buff = contents.getBytes();
         if (!file.exists()){
             try {
                 file.createNewFile();

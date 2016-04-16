@@ -11,7 +11,7 @@ public class Task {
 	}
 	
 	public void doRun(String device){
-//		new Worker().execute(device, packageList);
+		new Worker().execute(device, packageList);
 		for(int i = 0; i< packageList.length; i++) {
 			System.out.println(device +" : " + packageList[i].getName());
 			try {

@@ -22,13 +22,13 @@ public class ShellCommand {
     public Process getProcess() {
         return mProcess;
     }
-    private String showCMDResult(String cmd){
+    private String showCMDResult(String cmd){ //信息在获取一次之后，将会自动清空
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));
         StringBuffer stringBuffer = new StringBuffer();
         String line = "";
         try {
             while ((line =bufferedReader.readLine()) != null){
-                line = line.trim(); 
+                line = line.trim(); //去空格
                 if (line.length() != 0) {
                     stringBuffer.append(line);
                     stringBuffer.append("\n");
@@ -38,7 +38,7 @@ public class ShellCommand {
             e.printStackTrace();
         } finally {
             try {
-                bufferedReader.close();
+                bufferedReader.close(); //包装流会自动关闭上层流，无需手动关闭
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,7 +64,7 @@ public class ShellCommand {
         showCMDResult("SendBroadCast");
     }
     public void startMonkey(String device,File apkFile,int monkey_time){
-        int seed = (int)(Math.random()*1000); 
+        int seed = (int)(Math.random()*1000); //生成伪随机序列的种子数
         System.out.println(seed);
         startCmd("adb -s "+device+" shell monkey -p "+getApkPackageName(apkFile)+" --pct-touch 55 --pct-motion 5 --pct-trackball 20 --pct-majornav 20 -s "
                 +seed+" --throttle 500 --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes -v "
@@ -72,12 +72,22 @@ public class ShellCommand {
         showCMDResult("Monkey");
     }
 
-    
-    public void pull(String device,String fileName,String fileSuffix){
-        File file = new File(".");
+    /**
+     *
+     * @param device 设备号
+     * @param fileName 文件名
+     * @param newPath 新路径
+     */
+    public void pull(String device,String fileName,String newPath){
+        File file = new File(newPath);
+        if (!file.exists()){
+            if (!file.mkdirs()){
+                System.out.println("Pull Error: make dirs failed ！");
+            }
+        }
         try {
             String path = file.getCanonicalPath();
-            startCmd("adb -s "+device+" pull ./sdcard/"+fileName+fileSuffix+" "+path);
+            startCmd("adb -s "+device+" pull ./sdcard/"+fileName+" "+path);
             showCMDResult("Pull");
             showErrorResult("Pull");
         } catch (IOException e) {
@@ -95,7 +105,7 @@ public class ShellCommand {
         String line = "";
         try {
             while ((line =bufferedReader.readLine()) != null){
-                line = line.trim(); 
+                line = line.trim(); //去空格
                 if (line.length() != 0) {
                     stringBuffer.append(line);
                     stringBuffer.append("\n");
@@ -110,7 +120,22 @@ public class ShellCommand {
                 e.printStackTrace();
             }
         }
-        System.out.println("<"+cmd+" Error Info>: " + stringBuffer.toString());
+        System.out.println("<" + cmd + " Error Info>: " + stringBuffer.toString());
         return stringBuffer.toString();
+    }
+    public void stopApp(String device,File apkFile){
+        startCmd("adb -s "+device+" shell am force-stop "+getApkPackageName(apkFile));
+        showCMDResult("stopApp");
+    }
+    public void rename(String oldName,String newName){
+        File file = new File(oldName);
+        try {
+            String path = file.getCanonicalPath();
+            startCmd("cmd.exe /c ren "+path+" "+newName);
+            showCMDResult("Rename");
+            showErrorResult("Rename");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
