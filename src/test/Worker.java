@@ -45,8 +45,8 @@ public class Worker {
                 write(packageName,new File("./init.txt"));
             }
         }
-        mShellCommand.pull(device,"/db/result.db","./db");
-        mShellCommand.rename("./db/result.db",device+".db");
+        mShellCommand.pull(device,"/db/result1.db","./db");
+        mShellCommand.rename("./db/result1.db",device+".db");
     }
     private boolean isFileMonitorCompleted(String device,String packageName){
         mShellCommand.pull(device,packageName+".mark","./mark");
