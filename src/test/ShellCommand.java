@@ -22,13 +22,13 @@ public class ShellCommand {
     public Process getProcess() {
         return mProcess;
     }
-    private String showCMDResult(String cmd){ //ĞÅÏ¢ÔÚ»ñÈ¡Ò»´ÎÖ®ºó£¬½«»á×Ô¶¯Çå¿Õ
+    private String showCMDResult(String cmd){ //ä¿¡æ¯åœ¨è·å–ä¸€æ¬¡ä¹‹åï¼Œå°†ä¼šè‡ªåŠ¨æ¸…ç©º
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));
         StringBuffer stringBuffer = new StringBuffer();
         String line = "";
         try {
             while ((line =bufferedReader.readLine()) != null){
-                line = line.trim(); //È¥¿Õ¸ñ
+                line = line.trim(); //å»ç©ºæ ¼
                 if (line.length() != 0) {
                     stringBuffer.append(line);
                     stringBuffer.append("\n");
@@ -38,7 +38,7 @@ public class ShellCommand {
             e.printStackTrace();
         } finally {
             try {
-                bufferedReader.close(); //°ü×°Á÷»á×Ô¶¯¹Ø±ÕÉÏ²ãÁ÷£¬ÎŞĞèÊÖ¶¯¹Ø±Õ
+                bufferedReader.close(); //åŒ…è£…æµä¼šè‡ªåŠ¨å…³é—­ä¸Šå±‚æµï¼Œæ— éœ€æ‰‹åŠ¨å…³é—­
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,7 +64,7 @@ public class ShellCommand {
         showCMDResult("SendBroadCast");
     }
     public void startMonkey(String device,File apkFile,int monkey_time){
-        int seed = (int)(Math.random()*1000); //Éú³ÉÎ±Ëæ»úĞòÁĞµÄÖÖ×ÓÊı
+        int seed = (int)(Math.random()*1000); //ç”Ÿæˆä¼ªéšæœºåºåˆ—çš„ç§å­æ•°
         System.out.println(seed);
         startCmd("adb -s "+device+" shell monkey -p "+getApkPackageName(apkFile)+" --pct-touch 55 --pct-motion 5 --pct-trackball 20 --pct-majornav 20 -s "
                 +seed+" --throttle 500 --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes -v "
@@ -74,15 +74,15 @@ public class ShellCommand {
 
     /**
      *
-     * @param device Éè±¸ºÅ
-     * @param fileName ÎÄ¼şÃû
-     * @param newPath ĞÂÂ·¾¶
+     * @param device è®¾å¤‡å·
+     * @param fileName æ–‡ä»¶å
+     * @param newPath æ–°è·¯å¾„
      */
     public void pull(String device,String fileName,String newPath){
         File file = new File(newPath);
         if (!file.exists()){
             if (!file.mkdirs()){
-                System.out.println("Pull Error: make dirs failed £¡");
+                System.out.println("Pull Error: make dirs failed ï¼");
             }
         }
         try {
@@ -105,7 +105,7 @@ public class ShellCommand {
         String line = "";
         try {
             while ((line =bufferedReader.readLine()) != null){
-                line = line.trim(); //È¥¿Õ¸ñ
+                line = line.trim(); //å»ç©ºæ ¼
                 if (line.length() != 0) {
                     stringBuffer.append(line);
                     stringBuffer.append("\n");

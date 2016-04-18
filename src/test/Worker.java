@@ -27,7 +27,7 @@ public class Worker {
                 mShellCommand.sendBroadCast(device, BROADCAST_END, packageName);
 
                 int times =0;
-                while (times < 30){ //Èô¼ì²â²»µ½.markÎÄ¼þ£¬30Ãëºó×Ô¶¯ÍË³ö
+                while (times < 30){ //è‹¥æ£€æµ‹ä¸åˆ°.markæ–‡ä»¶ï¼Œ30ç§’åŽè‡ªåŠ¨é€€å‡º
                     try {
                         times++;
                         System.out.println("Waiting for " +times+" s");
